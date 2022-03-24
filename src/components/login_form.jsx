@@ -37,9 +37,8 @@ export default function Form() {
 				"password": password
 		   	}};
 			const response = await loginUserAccount(payload);
-			console.log("RESPONSEEEE",response);
 			setSubmitted(true);
-			navigate('/home');
+			navigate('/home', {state: response?.data});
 			setError(false);
         } catch (err) {
 			console.log("ERROR", err);
@@ -73,7 +72,6 @@ export default function Form() {
 	};
 
 	return (
-
 		<div className="w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-1">
 		<blockquote className="text-2xl font-medium text-center">
 			<p className="text-lg font-semibold">Welcome to My-App</p>

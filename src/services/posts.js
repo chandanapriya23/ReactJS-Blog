@@ -16,6 +16,7 @@ export const createUserAccount = async (payload) => {
 // API call for Login Existing user
 export const loginUserAccount = async (payload) => {
     const result = await Request.post(LOGIN_URL, payload);
+    console.log("LOGIN RESULTTT", result);
     token = result?.headers?.authorization;
     localStorage.setItem("token", token);
     return result;
@@ -28,7 +29,7 @@ export const createPost = async (payload) => {
 
 // API call for List all Posts
 export const getPosts = async () => {
-    return await Request.get(POST_URL);
+    return await Request.get(`${POST_URL}?page=2`);
 }
 
 // API call for Editing the Post
@@ -49,4 +50,9 @@ export const getComments = async (postId) => {
 // API call for Creating a comment
 export const createComment = async (payload) => {
     return await Request.post("comments", payload, {headers : {'Authorization': localStorage.getItem("token")}});
+}
+
+// API call for Deleting the Comment
+export const deleteComment = async (commentId) => {
+    return await Request.delete(`comments/${commentId}`, {headers : {'Authorization': localStorage.getItem("token")}});
 }

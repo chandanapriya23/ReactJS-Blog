@@ -19,9 +19,15 @@ export default props => {
 
     const handleSave = (e) => {
         props?.onSave({"title" : postTitle, "body" : postBody});
+
+        // props.setIsShowModal(false)
         // if(postTitle == '' || postBody == ''){
         //     setError(true);
         // }
+    }
+
+    const handleDisable = () => {
+        return props.mode == CREATE_POST ? (!postBody || !postTitle) : ""
     }
 
     useEffect( () => { 
@@ -52,11 +58,10 @@ export default props => {
                         </Container>
                         </Form>
                 </Modal.Body>
-                {/* {console.log("TITLEEE", postTitle)} */}
-                {/* {console.log("BODY", postBody)} */}
+                
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => props.setIsShowModal(false)}>Close</Button>
-                    <Button variant="primary" onClick={() => handleSave()} >Save changes</Button>
+                    <Button variant="primary" onClick={() => handleSave()} disabled = {handleDisable()}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
         </>

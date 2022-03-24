@@ -6,5 +6,6 @@ export default {
         'edit' : faEdit,
         "delete" : faTrashAlt,
         "comment" : faComment
+        // "send" : faPaperPlaneTop
     }
 }

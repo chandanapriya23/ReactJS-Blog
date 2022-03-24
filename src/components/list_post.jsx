@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import icons from "../utils/icons";
 import DeleteModal from "./delete_modal";
 import { deletePost } from "../services/posts";
 import Comments from "./comments";
+import UserContext from "./context";
 
 export default props => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postId, setPostId] = useState('');
+    const user = useContext(UserContext);
 
     const handleEdit = (data) => {
         props?.onEdit({"mode" : 'Edit Post', "post_id" : data?.postId, "post_title": data?.postTitle, "post_body" : data?.postBody});
@@ -33,18 +35,18 @@ export default props => {
 
     return(
         <>
-            <h3 className="m-2 text-xl font-bold dark:text-white"> All Posts </h3>
-            <div className="mb-20">
+            {/* <h3 className="m-2 text-xl font-bold dark:text-white"> All Posts </h3> */}
+            <div >
 
                 {
                     props.posts.map((post) => <div key = {post.id} className="h-full w-auto mr-2 rounded-2xl bg-white mt-2 ml-4 shadow-[10px_5px_10px_gray] mb-[30px]">
                         <div  className="pt-4 pr-2 pl-2 inline-block flex-row justify-around flex-wrap">
 
                             <div className="flex flex-row items-center m-2">
-                                <div className="m-1 mr-2 w-12 h-12 relative flex justify-center items-center rounded-full bg-orange-500 text-xl text-white uppercase">
+                                <div className="m-1 mr-2 w-8 h-8 relative flex justify-center items-center rounded-full bg-orange-500 text-xl text-white uppercase">
                                     {post.user.display_name.charAt(0).toUpperCase()}
                                 </div>
-                                <h6 className="pl-1 dark:text-white">{post.user.display_name}</h6> 
+                                <h6 className="pl-1 dark:text-white mb-[0px]">{post.user.display_name}</h6> 
                             </div>
 
                             <div className="flex flex-row items-center m-2">
@@ -56,15 +58,19 @@ export default props => {
                                 <p className="pl-1 dark:text-white">{post.body}</p>
                             </div>
 
-                            <div className="inline-block flex-row items-center m-2" onClick={() => handleEdit({"postId" : post.id, "postTitle" : post.title, "postBody" : post.body})}>
-                                <button><FontAwesomeIcon icon = {icons.actions["edit"]} className= "text-blue-700"/>
-                                <span className="pl-1 dark:text-white text-blue-700">Edit</span></button>
-                            </div>
+                            {user.id == post.user.id ? 
+                            <>
+                                <div className="inline-block flex-row items-center m-2" onClick={() => handleEdit({"postId" : post.id, "postTitle" : post.title, "postBody" : post.body})}>
+                                    <button><FontAwesomeIcon icon = {icons.actions["edit"]} className= "text-blue-700"/>
+                                    <span className="pl-1 dark:text-white text-blue-700">Edit</span></button>
+                                </div>
 
-                            <div className="inline-block flex-row items-center m-2" onClick={() => handleDelete(post.id)}>
-                                <button><FontAwesomeIcon icon = {icons.actions["delete"]} className= "text-red-500"/>
-                                <span className="pl-1 dark:text-white text-red-500">Delete</span></button>
-                            </div>
+                                <div className="inline-block flex-row items-center m-2" onClick={() => handleDelete(post.id)}>
+                                    <button><FontAwesomeIcon icon = {icons.actions["delete"]} className= "text-red-500"/>
+                                    <span className="pl-1 dark:text-white text-red-500">Delete</span></button>
+                                </div>
+                            </>
+                            : "" }
 
                             <div className="inline-block flex-row items-center m-2" onClick={() => handleComment(post.id)}>
                                 <button><FontAwesomeIcon icon = {icons.actions["comment"]} className= "text-amber-600"/>

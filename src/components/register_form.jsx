@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import icons from "../utils/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link,navigate } from "@reach/router";
 import { createUserAccount } from "../services/posts";
 
@@ -10,7 +8,6 @@ export default props => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [displayName, setDisplayName] = useState('');
-	const REGISTER_URL = '/users';
 
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
@@ -47,9 +44,9 @@ export default props => {
 				"password": password,
 				"display_name": displayName
 		   	}};
-			const response = await createUserAccount(payload);
+			await createUserAccount(payload);
 			setSubmitted(true);
-			navigate('/home');
+			navigate('/');
 			setError(false);
         } catch (err) {
 			console.log("ERROR", err);

@@ -1,6 +1,7 @@
 module.exports = {
   // content: [],
   mode: 'jit',
+  important : true,
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
