@@ -38,10 +38,18 @@ export default function Form() {
 		   	}};
 			const response = await loginUserAccount(payload);
 			setSubmitted(true);
-			navigate('/home', {state: response?.data});
+			navigate('/home', 
+			{   
+				state:  
+					{ 
+						data : response?.data,
+						token : response?.headers?.authorization,
+						status : response?.status
+					}
+			});
 			setError(false);
         } catch (err) {
-			console.log("ERROR", err);
+			console.log(err);
         }
 	};
 

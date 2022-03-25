@@ -31,6 +31,9 @@ module.exports = {
       },
       boxShadow: {
         '3xl' : "10px 5px 10px gray"
+      },
+      fontFamily : {
+        'sans' : ['Apple Chancery']
       }
     },
   },
