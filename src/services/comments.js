@@ -12,6 +12,11 @@ export const createComment = async (payload,token) => {
     return await Request.post("comments", payload, {headers : {'Authorization': token}});
 }
 
+// API call for Editing the Comment
+export const editCommentAPI = async (payload, commentId, token) => {
+    return await Request.patch(`comments/${commentId}`, payload, {headers : {'Authorization': token}});
+}
+
 // API call for Deleting the Comment
 export const deleteComment = async (commentId, token) => {
     return await Request.delete(`comments/${commentId}`, {headers : {'Authorization': token}});

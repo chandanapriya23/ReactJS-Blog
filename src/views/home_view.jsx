@@ -6,7 +6,6 @@ import { CREATE_POST } from "../utils/constants";
 import UserContext from "../components/context";
 import Alert from "../components/alert";
 import { navigate } from "@reach/router";
-import { number } from "prop-types";
 
 export default props => {
 
@@ -15,7 +14,7 @@ export default props => {
     const [posts, setPosts] = useState([]);
     const [editPostData, setEditPostData] = useState({"id":'', "title": '', "body":''});
     const [postId, setPostId] = useState('');
-    // const [spinner, showSpinner] = useState(false);
+    const [spinner, showSpinner] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -33,17 +32,19 @@ export default props => {
                 setIsShowModal(false);
                 // showSpinner(false);
                 setShowMessage(true);
+                handleGetPosts();
             } else {
                 const editPayload = {"post" : {"title" : data?.title, "body" : data?.body }}
                 const response = await editPost(postId, editPayload, data?.token);
                 console.log("EDIT PST RESPONSE", response);
                 setIsShowModal(false);
+                handleGetPosts();
             }
         } catch (err){
             console.log("ERROR :", err);
-            // if(err?.response?.status == 401){
-            //     navigate('/');
-            // }
+            if(err?.response?.status == 401){
+                navigate('/');
+            }
         }
     }
 
@@ -59,38 +60,11 @@ export default props => {
         setModalMode(CREATE_POST);
     }
 
-    // Get Posts by Page - API Call
-    const handlePostByPage = async (e) => {
-        console.log("E VALUEEE", e);
-        let pageNum;
-        if(Number.isInteger(e)){
-            pageNum = e;
-            setCurrentPage(pageNum);
-        } else{
-            pageNum = e?.target?.innerText;
-            setCurrentPage(pageNum);
-        }
-        let response =  await getPosts(pageNum);
-        setPosts([...response?.data?.posts]);
+    const handleCurrentPage = (page) => {
+        setCurrentPage(page);
     }
 
-    const pageCalculate = (e) => {
-        console.log("PAGE", e?.target?.innerText);
-        if(e?.target?.innerText == "Previous"){
-            console.log("PREVIOUS COMING");
-            setCurrentPage(parseInt(currentPage) - 1);
-        } else if(e?.target?.innerText == "Next"){
-            console.log("NEXT COMING");
-            setCurrentPage(parseInt(currentPage) + 1);
-        } else {
-            setCurrentPage(e?.target?.innerText);
-        }
-        console.log("CUREENET PAGE", currentPage);
-        handlePostByPage(currentPage);
-        // setCurrentPage(e?.target?.innerText);
-    }
-
-    const navigationHeader = () => {
+    const renderNavigationHeader = () => {
         return(
             <nav className="flex items-center justify-between flex-wrap bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 p-6">
                 <div className="flex items-center flex-shrink-0 text-white mr-6">
@@ -108,28 +82,22 @@ export default props => {
         )
     }
 
-    const pagination = () => {
+    const renderPagination = () => {
         return (
-            <div className="ml-[75%]">
+            <div className="col-3 mt-[1em]">
                 <nav>
                     <ul className="inline-flex -space-x-px">
                         <li>
-                        <a onClick = {(e) => pageCalculate(e)} className="py-2 px-3 ml-0 leading-tight text-fuchsia-400 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                            <a onClick = {() => handleCurrentPage(currentPage - 1)} className="py-2 px-3 ml-0 leading-tight text-fuchsia-400 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
                         </li>
                         <li>
-                        <a onClick = {(e) => handlePostByPage(e)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                            <a onClick = {() => handleCurrentPage(1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
                         </li>
                         <li>
-                        <a onClick = {(e) => handlePostByPage(e)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                            <a onClick = {() => handleCurrentPage(2)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
                         </li>
                         <li>
-                        <a onClick = {(e) => handlePostByPage(e)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">3</a>
-                        </li>
-                        <li>
-                        <a onClick = {(e) => handlePostByPage(e)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-                        </li>
-                        <li>
-                        <a onClick = {(e) => pageCalculate(e)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                            <a onClick = {() => handleCurrentPage(currentPage + 1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -137,15 +105,15 @@ export default props => {
         )
     }
 
-    const createPostBtn = () => {
+    const renderCreatePostBtn = () => {
         return (
-            <div className="col-3"> 
+            <div className="col-3 mt-[0.5em]"> 
                 <button className = "rounded bg-gradient-to-r from-blue-500 via-blue-500 to-blue-600 hover:bg-gradient-to-br py-2 px-4 text-white" onClick={() => handleModal()}>Create Post</button>
             </div>
         )
     }
 
-    const alertMessage = () => {
+    const renderAlertMessage = () => {
         return (
             <div className = "col-6">
                 {showMessage && <Alert message = {modalMode == CREATE_POST ? "Post has been successfully created." : "Post has been successfully updated."}/>}
@@ -153,7 +121,7 @@ export default props => {
         )
     }
 
-    const footerHeader = () => {
+    const renderFooterHeader = () => {
         return (
             <footer className="py-3 bg-gray-700 text-center text-white">
                 Copyright © 2022 Brivity. All rights reserved
@@ -161,12 +129,17 @@ export default props => {
         )
     }
 
+    const handleGetPosts = async() => {
+        let response =  await getPosts(currentPage);
+        setPosts([...response?.data?.posts]);
+    }
 
     useEffect( async () => { 
         if(props?.location?.state?.data == undefined || props?.location?.state?.data == null){
             navigate('/');
         } else {
-            let response =  await getPosts(1);
+            // handleGetPosts();
+            let response =  await getPosts(currentPage);
             setPosts([...response?.data?.posts]);
         }
     },[currentPage]);
@@ -175,19 +148,16 @@ export default props => {
         <>
             <UserContext.Provider value = {props.location.state}>
                 <div className = "bg-gray-200"> 
-
-                    {navigationHeader()}
-
+                    {renderNavigationHeader()}
                     <div className="p-4 row">
-                        {createPostBtn()}
-                        {alertMessage()}
+                        {renderCreatePostBtn()}
+                        {renderAlertMessage()}
+                        {renderPagination()}
                     </div>
-
-                    {isShowModal ? <CreateEditModal mode={modalMode} onSave={handleSave} editData={editPostData} show= {isShowModal} setIsShowModal={setIsShowModal}/> : ""}
-                    <ListPost posts = {posts} onEdit={handleEdit}></ListPost>
-                    
-                    {pagination()}
-                    {footerHeader()}
+                    {isShowModal ? <CreateEditModal spinner = {spinner} mode={modalMode} onSave={handleSave} editData={editPostData} show= {isShowModal} setIsShowModal={setIsShowModal}/> : ""}
+                    <ListPost posts = {posts} onEdit={handleEdit} onGetPosts = {handleGetPosts}></ListPost>
+                    {renderPagination()}
+                    {renderFooterHeader()}
                 </div>
             </UserContext.Provider>
         </>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Form, Container, Row, Col } from "react-bootstrap";
 import { CREATE_POST } from "../utils/constants";
-// import { Rings } from  'react-loader-spinner';
+import { Rings } from  'react-loader-spinner';
 import UserContext from "./context"; 
 
 export default props => {
@@ -63,7 +63,7 @@ export default props => {
                     <Button variant="primary" onClick={() => handleSave()} disabled = {handleDisable()}>Save changes</Button>
                 </Modal.Footer>
             </Modal>
-            {/* {spinner && <Rings color="#00BFFF" height="10em" width="10em" />} */}
+            {props.spinner && <Rings color="#00BFFF" height="10em" width="10em" />}
         </>
     )
 }
