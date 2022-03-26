@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { Link, navigate } from "@reach/router";
 import { createUserAccount } from "../services/posts";
+import FormTitle from "./common/form_title";
+import FormLabel from "./common/form_label";
+import FormError from "./common/form_error";
+import FormFields from "./common/form_field";
+import SignInSignUpLink from "./common/form_signin_signup_link";
+// import Alert from "./alert";
 
 export default props => {
 
@@ -8,6 +14,7 @@ export default props => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [displayName, setDisplayName] = useState('');
+	const [showAlert, setShowAlert] = useState(false);
 
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
@@ -48,6 +55,10 @@ export default props => {
 			};
 			await createUserAccount(payload);
 			setSubmitted(true);
+			// setShowAlert(true);
+			// setTimeout(() => {
+			// 	setShowAlert(false);
+			// }, 3000);
 			navigate('/');
 			setError(false);
 		} catch (err) {
@@ -55,139 +66,17 @@ export default props => {
 		}
 	};
 
-	const renderTitle = () => {
-		return (
-			<blockquote className="text-2xl font-medium text-center">
-				<p className="text-lg font-semibold">Welcome to Brivity</p>
-			</blockquote>
-		)
-	}
-
-	const renderUserRegistrationLabel = () => {
-		return (
-			<div className="flex items-center mt-3 justify-center">
-				<h1 className="text-2xl font-medium text-primary mt-4 mb-2">
-					User Registration
-				</h1>
-			</div>
-		)
-	}
-
-	// Showing success message
-	const successMessage = () => {
-		return (
-			<div
-				className="success"
-				style={{
-					display: submitted ? '' : 'none',
-				}}>
-				<h1>User {displayName} successfully registered!!</h1>
-			</div>
-		);
-	};
-
-	// Showing error message if error is true
-	const errorMessage = () => {
-		return (
-			<div
-				className="error"
-				style={{
-					display: error ? '' : 'none',
-				}}>
-				<h1>Please enter all the fields</h1>
-			</div>
-		);
-	};
-
-	const renderRegistrationForm = () => {
-		return (
-			<form>
-				<label className="text-left">Name</label>
-				{renderRegistrationFormNameField()}
-
-				<label className="text-left">Email</label>
-				{renderRegistrationFormEmailField()}
-
-				<label className="label">Password</label>
-				{renderRegistrationFormPasswordField()}
-
-				{renderRegistrationFormRegisterBtn()}
-			</form>
-		)
-	}
-
-	const renderRegistrationFormNameField = () => {
-		return (
-			<input
-				onChange={handleName}
-				className={"w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
-				value={displayName}
-				type="text"
-				placeholder="Username"
-			/>
-		)
-	}
-
-	const renderRegistrationFormEmailField = () => {
-		return (
-			<input
-				onChange={handleEmail}
-				className={"w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
-				value={email}
-				type="email"
-				placeholder="e.g. some.example"
-			/>
-		)
-	}
-
-	const renderRegistrationFormPasswordField = () => {
-		return (
-			<input
-				onChange={handlePassword}
-				className={"w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
-				value={password}
-				type="password"
-			/>
-		)
-	}
-
-	const renderRegistrationFormRegisterBtn = () => {
-		return (
-			<div className="flex items-center mt-3 justify-center">
-				<button
-					className={"bg-blue-700 hover:bg-blue-500 py-2 px-4 text-md text-white rounded border border-blue focus:outline-none focus:border-black"}
-					onClick={handleSubmit}
-					type="submit"
-				>
-					Register
-				</button>
-			</div>
-		)
-	}
-
-	const renderSignUpLink = () => {
-		return (
-			<div className="flex items-center mt-3 justify-center">
-				<button className={"justify-center text-blue-500"}>
-					Already have an account?
-					<Link to="/"> Sign In </Link>
-				</button>
-			</div>
-		)
-	}
-
 	return (
 		<div className="w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-1">
-			{renderTitle()}
+			{/* <FormTitle/> */}
 			<div className="text-primary m-6">
-				{renderUserRegistrationLabel()}
+				<FormLabel data="Join Brivtter"/>
 				<div className="messages">
-					{errorMessage()}
-					{successMessage()}
+					<FormError hasError = {error}/>
+					{/* {showAlert && <Alert message = {`User ${displayName} successfully registered!!`}/>} */}
 				</div>
-
-				{renderRegistrationForm()}
-				{renderSignUpLink()}
+				<FormFields mode = "register" displayName = {displayName} handleName = {handleName} email = {email} handleEmail = {handleEmail} password = {password} handlePassword = {handlePassword} handleSubmit = {handleSubmit}/>
+				<SignInSignUpLink mode = "register"/>
 			</div>
 		</div>
 	);

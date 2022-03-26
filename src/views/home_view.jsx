@@ -6,6 +6,7 @@ import { CREATE_POST } from "../utils/constants";
 import UserContext from "../components/context";
 import Alert from "../components/alert";
 import { navigate } from "@reach/router";
+// import BBImage from "../images/"
 
 export default props => {
 
@@ -32,12 +33,19 @@ export default props => {
                 setIsShowModal(false);
                 // showSpinner(false);
                 setShowMessage(true);
+                // setTimeout(() => {
+                //     setShowMessage(false);
+                // }, 3000);
                 handleGetPosts();
             } else {
                 const editPayload = {"post" : {"title" : data?.title, "body" : data?.body }}
                 const response = await editPost(postId, editPayload, data?.token);
                 console.log("EDIT PST RESPONSE", response);
                 setIsShowModal(false);
+                setShowMessage(true);
+                setTimeout(() => {
+                    setShowMessage(false);
+                }, 3000);
                 handleGetPosts();
             }
         } catch (err){
@@ -68,8 +76,9 @@ export default props => {
         return(
             <nav className="flex items-center justify-between flex-wrap bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 p-6">
                 <div className="flex items-center flex-shrink-0 text-white mr-6">
-                    <svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
-                    <span className="font-semibold text-3xl tracking-tight italic">Brivity Blog</span>
+                    {/* <svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg> */}
+                    <img src="https://brivitymktg.wpengine.com/wp-content/uploads/2019/09/Brivity-Platform-600px-logo.png" width="54" height="54" alt="Brivity" id="logo" data-height-percentage="52" data-actual-width="597" data-actual-height="166"/>
+                    <span className="font-semibold text-3xl tracking-tight italic">Brivtter</span>
                 </div>
 
                 <div className="hidden w-full block lg:flex items-center w-auto" id="menu">
@@ -86,7 +95,7 @@ export default props => {
         return (
             <div className="col-3 mt-[1em]">
                 <nav>
-                    <ul className="inline-flex -space-x-px">
+                    <ul className="inline-flex -space-x-px float-right">
                         <li>
                             <a onClick = {() => handleCurrentPage(currentPage - 1)} className="py-2 px-3 ml-0 leading-tight text-fuchsia-400 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
                         </li>
@@ -116,7 +125,7 @@ export default props => {
     const renderAlertMessage = () => {
         return (
             <div className = "col-6">
-                {showMessage && <Alert message = {modalMode == CREATE_POST ? "Post has been successfully created." : "Post has been successfully updated."}/>}
+                {showMessage && <Alert message = { modalMode == CREATE_POST ? "Post has been successfully created." : modalMode == 'delete' ? "Post has been successfully deleted" : "Post has been successfully updated."}/>}
             </div>
         )
     }
@@ -132,6 +141,15 @@ export default props => {
     const handleGetPosts = async() => {
         let response =  await getPosts(currentPage);
         setPosts([...response?.data?.posts]);
+    }
+
+    const deleteAlertMessage = () => {
+        setModalMode('delete');
+        setShowMessage(true);
+        renderAlertMessage();
+        setTimeout(() => {
+            setShowMessage(false);
+        }, 3000);
     }
 
     useEffect( async () => { 
@@ -155,8 +173,8 @@ export default props => {
                         {renderPagination()}
                     </div>
                     {isShowModal ? <CreateEditModal spinner = {spinner} mode={modalMode} onSave={handleSave} editData={editPostData} show= {isShowModal} setIsShowModal={setIsShowModal}/> : ""}
-                    <ListPost posts = {posts} onEdit={handleEdit} onGetPosts = {handleGetPosts}></ListPost>
-                    {renderPagination()}
+                    <ListPost posts = {posts} onEdit={handleEdit} onGetPosts = {handleGetPosts} deleteAlertMessage = {deleteAlertMessage}></ListPost>
+                    {/* {renderPagination()} */}
                     {renderFooterHeader()}
                 </div>
             </UserContext.Provider>

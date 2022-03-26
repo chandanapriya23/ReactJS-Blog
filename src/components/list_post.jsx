@@ -6,6 +6,7 @@ import { deletePost } from "../services/posts";
 import Comments from "./comments";
 import UserContext from "./context";
 import { navigate } from "@reach/router";
+// import Alert from "../components/alert";
 
 export default props => {
 
@@ -15,7 +16,7 @@ export default props => {
 
     // Editing the post and sending it to parent
     const handleEdit = (data) => {
-        props ?.onEdit({ "mode": 'Edit Post', "post_id": data ?.postId, "post_title": data ?.postTitle, "post_body": data ?.postBody});
+        props?.onEdit({ "mode": 'Edit Post', "post_id": data?.postId, "post_title": data?.postTitle, "post_body": data?.postBody});
     }
 
     // Handling Delete Model
@@ -27,9 +28,10 @@ export default props => {
     // Deleting the Post
     const confirmDelete = async () => {
         try {
-            await deletePost(postId, user ?.token);
+            await deletePost(postId, user?.token);
             setShowDeleteModal(false);
-            props ?.onGetPosts();
+            props.deleteAlertMessage();
+            props?.onGetPosts();
         } catch (err) {
             console.log("Delete Post Error :", err);
             if (err ?.response ?.status == 401) {
@@ -116,9 +118,9 @@ export default props => {
                             {renderPostTitle(post ?.title)}
                             {renderPostBody(post.body)}
 
-                            {user ?.data ?.id == post.user ?.id ?
+                            {user?.data?.id == post.user?.id ?
                                 <>
-                                    {renderPostEditBtn(post ?.id, post ?.title, post ?.body)}
+                                    {renderPostEditBtn(post?.id, post?.title, post?.body)}
                                     {renderPostPostDeleteBtn(post.id)}
                                 </> : "" }
 
@@ -131,6 +133,5 @@ export default props => {
             </div>
             {showDeleteModal ? <DeleteModal onDelete={confirmDelete} show={showDeleteModal} setShowDeleteModal={setShowDeleteModal} /> : ""}
         </>
-
     )
 }

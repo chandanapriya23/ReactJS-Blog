@@ -61,12 +61,9 @@ export default props => {
     const handleEditSubmit = async (commentId) => {
         try{
             const payload = {"comment": {"contents": editComment}};
-            console.log("PAYLOADD", payload);
             const response = await editCommentAPI(payload, commentId, user?.token);
-            console.log("RESSS", response);
             document.getElementById('editcomment' + commentId).style.display = 'none';
             document.getElementById('comment' + commentId).style.display ="block";
-            // setEditComment
             handleGetComments();
         } catch(err){
             console.log("Edit Comment Error :", err);
@@ -75,6 +72,15 @@ export default props => {
             }
         }
         
+    }
+
+    const renderAddComment = () => {
+        return(
+            <div> 
+                <textarea className = "border transparent hover:border-indigo-300" id="textcomment" rows="2" cols="50" value = {addComment} placeholder="Type your comment here...." onChange={handleChange}></textarea>
+                <button className="text-white p-[1em] !important rounded-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br px-4 py-2" onClick= {handleSubmit}>Add Comment</button>
+            </div>
+        )
     }
 
     useEffect( async () => { 
@@ -90,7 +96,7 @@ export default props => {
                         <p id ={'comment' + comment.id }>{comment.content}</p>
 
                         <div id={'editcomment' + comment.id} style={{display:"none"}}>
-                            <textarea id = {'textarea' + comment.id} rows="2" cols="50" value = {editComment} onChange={(e) => handleChange(e)}>
+                            <textarea className = "border border-slate-300 hover:border-indigo-300" id = {'textarea' + comment.id} rows="2" cols="50" value = {editComment} onChange={(e) => handleChange(e)}>
                             </textarea>
                             <button onClick = {() => handleEditSubmit(comment.id)}> EDIT </button>
                         </div>
@@ -112,10 +118,7 @@ export default props => {
                 )
             }
 
-            <div> 
-                <textarea id="textcomment" rows="2" cols="50" value = {addComment} placeholder="Type your comment here...." onChange={handleChange}></textarea>
-                <button className="text-white p-[1em] !important rounded-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br px-4 py-2" onClick= {handleSubmit}>Add Comment</button>
-            </div>
+            {renderAddComment()}
         </div>
     )
 } 
