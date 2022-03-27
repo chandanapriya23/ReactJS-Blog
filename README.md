@@ -2,6 +2,6 @@
 
 Follow below steps
 
-Run ```npm install``` to install dependencies from packge.json file.
-Run ```npm run start``` to start the application.
-RUn ```npm run coverage``` for test code coverage.
+Run ```npm install``` to install dependencies from packge.json file.__
+Run ```npm run start``` to start the application.__
+Run ```npm run coverage``` for test code coverage.__
