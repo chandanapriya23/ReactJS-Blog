@@ -43,7 +43,7 @@ const FormFields = (props) => {
 		return(
 			<div className="flex items-center mt-3 justify-center">
 				<button
-					className={"bg-blue-700 hover:bg-blue-500 py-2 px-4 text-md text-white rounded border border-blue focus:outline-none focus:border-black"}
+					className={"bg-gradient-to-r from-cyan-600 via-cyan-700 to-cyan-800 hover:bg-gradient-to-br py-2 px-4 text-md text-white rounded border border-blue focus:outline-none focus:border-black"}
 					onClick={props.handleSubmit}
 					type="submit"
 				>
