@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, navigate } from "@reach/router";
 import { loginUserAccount } from "../services/posts";
-import FormTitle from "./common/form_title";
 import FormLabel from "./common/form_label";
 import FormError from "./common/form_error";
 import FormFields from "./common/form_field";
@@ -62,7 +61,6 @@ export default function Form() {
 
 	return (
 		<div className="w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-1">
-			{/* <FormTitle/> */}
 			<div className="text-primary m-6">
 				<FormLabel data="Sign in to Brivtter"/>
 				<div className="messages">

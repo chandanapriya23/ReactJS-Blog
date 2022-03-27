@@ -10,8 +10,8 @@ export const createUserAccount = async (payload) => {
 }
 
 // API call for Login Existing user
-export const loginUserAccount = async (payload) => {
-    return await Request.post(LOGIN_URL, payload);
+export const loginUserAccount =  (payload) => {
+    return  Request.post(LOGIN_URL, payload);
 }
 
 // API call for Creating Post

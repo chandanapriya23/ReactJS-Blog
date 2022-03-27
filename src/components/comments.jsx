@@ -30,7 +30,7 @@ export default props => {
         if(mode == 'create'){
             setAddComment(e.target.value);
         } else{
-            setEditComment(e.target.value)
+            setEditComment(e.target.value);
         }
     }
 
@@ -65,6 +65,7 @@ export default props => {
             document.getElementById('editcomment' + commentId).style.display = 'none';
             document.getElementById('comment' + commentId).style.display ="block";
             handleGetComments();
+            setMode('create');
         } catch(err){
             console.log("Edit Comment Error :", err);
             if(err?.response?.status == 401){
@@ -76,10 +77,29 @@ export default props => {
 
     const renderAddComment = () => {
         return(
-            <div> 
+            <div className="flex"> 
                 <textarea className = "border transparent hover:border-indigo-300" id="textcomment" rows="2" cols="50" value = {addComment} placeholder="Type your comment here...." onChange={handleChange}></textarea>
-                <button className="text-white p-[1em] !important rounded-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br px-4 py-2" onClick= {handleSubmit}>Add Comment</button>
+                <button className="text-white p-[1em] !important rounded-lg bg-gradient-to-r from-cyan-600 via-cyan-700 to-cyan-800 hover:bg-gradient-to-br py-2" onClick= {handleSubmit}>Add Comment</button>
             </div>
+        )
+    }
+
+    const renderEditDeleteComment = (commentUserId, commentId, commentContent) => {
+        return(
+            <>
+                {user.data.id == commentUserId ?
+                    <div>
+                        <button className="mr-[30px]" onClick={() => handleEditComment(commentId, commentContent)}>
+                            <FontAwesomeIcon icon = {icons.actions["edit"]} className= "text-blue-700"/>
+                            <span className="pl-1 dark:text-white text-blue-700">Edit</span>
+                        </button>
+                        <button onClick = {() => handleDeleteComment(commentId)}>
+                            <FontAwesomeIcon icon = {icons.actions["delete"]} className= "text-amber-600"/>
+                            <span className="pl-1 dark:text-white text-red-500">Delete</span>
+                        </button>
+                    </div> 
+                : ""}
+            </>
         )
     }
 
@@ -98,26 +118,13 @@ export default props => {
                         <div id={'editcomment' + comment.id} style={{display:"none"}}>
                             <textarea className = "border border-slate-300 hover:border-indigo-300" id = {'textarea' + comment.id} rows="2" cols="50" value = {editComment} onChange={(e) => handleChange(e)}>
                             </textarea>
-                            <button onClick = {() => handleEditSubmit(comment.id)}> EDIT </button>
+                            <button className = "py-2 rounded-md p-[0.5em] bg-gradient-to-r from-cyan-600 via-cyan-700 to-cyan-800 hover:bg-gradient-to-br text-white" onClick = {() => handleEditSubmit(comment.id)}> Save </button>
                         </div>
 
-                        {/* Displaying the Edit, Delete buttons */}
-                        {user.data.id == comment.user.id ?
-                        <div>
-                            <button className="mr-[30px]" onClick={() => handleEditComment(comment.id, comment.content)}>
-                                <FontAwesomeIcon icon = {icons.actions["edit"]} className= "text-blue-700"/>
-                                <span className="pl-1 dark:text-white text-blue-700">Edit</span>
-                            </button>
-                            <button onClick = {() => handleDeleteComment(comment.id)}>
-                                <FontAwesomeIcon icon = {icons.actions["delete"]} className= "text-amber-600"/>
-                                <span className="pl-1 dark:text-white text-red-500">Delete</span>
-                            </button>
-                        </div> 
-                        : ""}
+                        {renderEditDeleteComment(comment.user.id, comment.id, comment.content)}
                     </div>
                 )
             }
-
             {renderAddComment()}
         </div>
     )

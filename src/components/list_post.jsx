@@ -53,7 +53,7 @@ export default props => {
     const renderUserInfo = (name) => {
         return (
             <div className="flex flex-row items-center m-2">
-                <div className="m-1 mr-2 w-8 h-8 relative flex justify-center items-center rounded-full bg-orange-500 text-xl text-white uppercase">
+                <div className="m-1 mr-2 w-8 h-8 relative flex justify-center items-center rounded-full text-xl text-white uppercase bg-orange-500">
                     {name.charAt(0).toUpperCase()}
                 </div>
                 <h6 className="pl-1 dark:text-white mb-[0px]">{name.charAt(0).toUpperCase() + name.slice(1)}</h6>

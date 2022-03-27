@@ -6,14 +6,14 @@ import { CREATE_POST } from "../utils/constants";
 import UserContext from "../components/context";
 import Alert from "../components/alert";
 import { navigate } from "@reach/router";
-// import BBImage from "../images/"
+import BBLogo from "../images/BBLogo.png";
 
 export default props => {
 
     const [isShowModal, setIsShowModal] = useState(false);
     const [modalMode, setModalMode] = useState('');
     const [posts, setPosts] = useState([]);
-    const [editPostData, setEditPostData] = useState({"id":'', "title": '', "body":''});
+    const [editPostData, setEditPostData] = useState({ "id": '', "title": '', "body": '' });
     const [postId, setPostId] = useState('');
     const [spinner, showSpinner] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
@@ -21,46 +21,44 @@ export default props => {
 
     // Creating & Editing Post API call
     const handleSave = async (data) => {
-        try{
-            if(modalMode === CREATE_POST){
-                const createPayload = {"post": {"title": data?.title, "body": data?.body}}
-                // showSpinner(true);
-                const response = await createPost(createPayload, data?.token);
-                console.log("Response", response);
-                if(response?.error && (response.error == "Signature has expired")){
-                    navigate('/');
-                }
+        try {
+            if (modalMode === CREATE_POST) {
+                const createPayload = { "post": { "title": data ?.title, "body": data ?.body} }
+                showSpinner(true);
+                const response = await createPost(createPayload, data ?.token);
+                // if (response ?.error && (response.error == "Signature has expired")) {
+                //     navigate('/');
+                // }
                 setIsShowModal(false);
-                // showSpinner(false);
+                showSpinner(false);
                 setShowMessage(true);
-                // setTimeout(() => {
-                //     setShowMessage(false);
-                // }, 3000);
+                setTimeout(() => {
+                    setShowMessage(false);
+                }, 2000);
                 handleGetPosts();
             } else {
-                const editPayload = {"post" : {"title" : data?.title, "body" : data?.body }}
-                const response = await editPost(postId, editPayload, data?.token);
-                console.log("EDIT PST RESPONSE", response);
+                const editPayload = { "post": { "title": data ?.title, "body": data ?.body } }
+                const response = await editPost(postId, editPayload, data ?.token);
                 setIsShowModal(false);
                 setShowMessage(true);
                 setTimeout(() => {
                     setShowMessage(false);
-                }, 3000);
+                }, 2000);
                 handleGetPosts();
             }
-        } catch (err){
+        } catch (err) {
             console.log("ERROR :", err);
-            if(err?.response?.status == 401){
+            if (err ?.response ?.status == 401) {
                 navigate('/');
             }
         }
     }
 
     const handleEdit = async (data) => {
-        setEditPostData({"id": data?.post_id, "title" : data?.post_title, "body" : data?.post_body});
-        setModalMode(data?.mode);
+        setEditPostData({ "id": data ?.post_id, "title": data ?.post_title, "body": data ?.post_body});
+        setModalMode(data ?.mode);
         setIsShowModal(true);
-        setPostId(data?.post_id);
+        setPostId(data ?.post_id);
     }
 
     const handleModal = () => {
@@ -73,21 +71,33 @@ export default props => {
     }
 
     const renderNavigationHeader = () => {
-        return(
+        return (
             <nav className="flex items-center justify-between flex-wrap bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 p-6">
-                <div className="flex items-center flex-shrink-0 text-white mr-6">
-                    {/* <svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg> */}
-                    <img src="https://brivitymktg.wpengine.com/wp-content/uploads/2019/09/Brivity-Platform-600px-logo.png" width="54" height="54" alt="Brivity" id="logo" data-height-percentage="52" data-actual-width="597" data-actual-height="166"/>
-                    <span className="font-semibold text-3xl tracking-tight italic">Brivtter</span>
-                </div>
-
-                <div className="hidden w-full block lg:flex items-center w-auto" id="menu">
-                    <h5 className="pl-1 text-emerald-100 pr-[0.5em] italic">{props?.location?.state?.data?.display_name}</h5>
-                    <div className="w-12 h-12 relative flex justify-center items-center rounded-full bg-orange-500 text-xl text-white uppercase">
-                        {props?.location?.state?.data?.display_name.charAt(0).toUpperCase()}
-                    </div>
-                </div>
+                {renderLogoTitle()}
+                {renderUserPtofile()}
             </nav>
+        )
+    }
+
+    const renderLogoTitle = () => {
+        return (
+            <div className="flex items-center flex-shrink-0 text-white mr-6">
+                {/* <svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg> */}
+                {/* <img src="https://brivitymktg.wpengine.com/wp-content/uploads/2019/09/Brivity-Platform-600px-logo.png" width="54" height="54" alt="Brivity" id="logo" data-height-percentage="52" data-actual-width="597" data-actual-height="166"/> */}
+                <img src={BBLogo} width="70" height="65" />
+                <span className="font-semibold text-4xl tracking-tight">Brivtter</span>
+            </div>
+        )
+    }
+
+    const renderUserPtofile = () => {
+        return (
+            <div className="hidden w-full block lg:flex items-center w-auto" id="menu">
+                <h5 className="pl-1 text-emerald-100 pr-[0.5em]">{props ?.location ?.state ?.data ?.display_name}</h5>
+                <div className="w-12 h-12 relative flex justify-center items-center rounded-full bg-orange-500 text-xl text-white uppercase">
+                    {props ?.location ?.state ?.data ?.display_name.charAt(0).toUpperCase()}
+                </div>
+            </div>
         )
     }
 
@@ -97,16 +107,16 @@ export default props => {
                 <nav>
                     <ul className="inline-flex -space-x-px float-right">
                         <li>
-                            <a onClick = {() => handleCurrentPage(currentPage - 1)} className="py-2 px-3 ml-0 leading-tight text-fuchsia-400 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                            <a onClick={() => handleCurrentPage(currentPage - 1)} className="py-2 px-3 ml-0 leading-tight text-fuchsia-400 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
                         </li>
                         <li>
-                            <a onClick = {() => handleCurrentPage(1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                            <a onClick={() => handleCurrentPage(1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
                         </li>
                         <li>
-                            <a onClick = {() => handleCurrentPage(2)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                            <a onClick={() => handleCurrentPage(2)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
                         </li>
                         <li>
-                            <a onClick = {() => handleCurrentPage(currentPage + 1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                            <a onClick={() => handleCurrentPage(currentPage + 1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -116,16 +126,16 @@ export default props => {
 
     const renderCreatePostBtn = () => {
         return (
-            <div className="col-3 mt-[0.5em]"> 
-                <button className = "rounded bg-gradient-to-r from-blue-500 via-blue-500 to-blue-600 hover:bg-gradient-to-br py-2 px-4 text-white" onClick={() => handleModal()}>Create Post</button>
+            <div className="col-3 mt-[0.5em]">
+                <button className="rounded-lg bg-gradient-to-r from-cyan-600 via-cyan-700 to-cyan-800 hover:bg-gradient-to-br py-2 px-4 text-white" onClick={() => handleModal()}>Create Post</button>
             </div>
         )
     }
 
     const renderAlertMessage = () => {
         return (
-            <div className = "col-6">
-                {showMessage && <Alert message = { modalMode == CREATE_POST ? "Post has been successfully created." : modalMode == 'delete' ? "Post has been successfully deleted" : "Post has been successfully updated."}/>}
+            <div className="col-6">
+                {showMessage && <Alert message={modalMode == CREATE_POST ? "Post has been successfully created." : modalMode == 'delete' ? "Post has been successfully deleted" : "Post has been successfully updated."} />}
             </div>
         )
     }
@@ -138,9 +148,9 @@ export default props => {
         )
     }
 
-    const handleGetPosts = async() => {
-        let response =  await getPosts(currentPage);
-        setPosts([...response?.data?.posts]);
+    const handleGetPosts = async () => {
+        let response = await getPosts(currentPage);
+        setPosts([...response ?.data ?.posts]);
     }
 
     const deleteAlertMessage = () => {
@@ -149,31 +159,31 @@ export default props => {
         renderAlertMessage();
         setTimeout(() => {
             setShowMessage(false);
-        }, 3000);
+        }, 2000);
     }
 
-    useEffect( async () => { 
-        if(props?.location?.state?.data == undefined || props?.location?.state?.data == null){
+    useEffect(async () => {
+        if (props ?.location ?.state ?.data == undefined || props ?.location ?.state ?.data == null) {
             navigate('/');
         } else {
             // handleGetPosts();
-            let response =  await getPosts(currentPage);
-            setPosts([...response?.data?.posts]);
+            let response = await getPosts(currentPage);
+            setPosts([...response ?.data ?.posts]);
         }
-    },[currentPage]);
-    
+    }, [currentPage]);
+
     return (
         <>
-            <UserContext.Provider value = {props.location.state}>
-                <div className = "bg-gray-200"> 
+            <UserContext.Provider value={props.location.state}>
+                <div className="bg-gray-200">
                     {renderNavigationHeader()}
                     <div className="p-4 row">
                         {renderCreatePostBtn()}
                         {renderAlertMessage()}
                         {renderPagination()}
                     </div>
-                    {isShowModal ? <CreateEditModal spinner = {spinner} mode={modalMode} onSave={handleSave} editData={editPostData} show= {isShowModal} setIsShowModal={setIsShowModal}/> : ""}
-                    <ListPost posts = {posts} onEdit={handleEdit} onGetPosts = {handleGetPosts} deleteAlertMessage = {deleteAlertMessage}></ListPost>
+                    {isShowModal ? <CreateEditModal spinner={spinner} mode={modalMode} onSave={handleSave} editData={editPostData} show={isShowModal} setIsShowModal={setIsShowModal} /> : ""}
+                    <ListPost posts={posts} onEdit={handleEdit} onGetPosts={handleGetPosts} deleteAlertMessage={deleteAlertMessage}></ListPost>
                     {/* {renderPagination()} */}
                     {renderFooterHeader()}
                 </div>

@@ -6,10 +6,10 @@ const FormFields = (props) => {
 		return (
 			<input
 				onChange={props.handleName}
-				className={"w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
+				className={"w-full p-2 text-black border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
 				value={props.displayName}
 				type="text"
-				placeholder="e.g. abc"
+				placeholder="Enter your Name"
 			/>
 		)
 	}
@@ -18,10 +18,10 @@ const FormFields = (props) => {
         return (
             <input
                 onChange={props.handleEmail}
-                className={"w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
+                className={"w-full p-2 text-black border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
                 value={props.email}
                 type="email"
-                placeholder="e.g. abc@123.com"
+                placeholder="Enter your Email"
             />
         )
     }
@@ -30,9 +30,10 @@ const FormFields = (props) => {
         return(
             <input
                 onChange={props.handlePassword}
-                className={"w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
+                className={"w-full p-2 text-black border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"}
                 value={props.password}
                 type="password"
+                placeholder="Enter your Password"
             />
         )
     }
@@ -57,14 +58,14 @@ const FormFields = (props) => {
             {
                 props.mode == "register" ? 
                 <>
-                    <label className="text-left">Name</label>
+                    {/* <label className="text-left">Name</label> */}
                     {renderFormNameField()}
                 </>
                 : ""
             }
-            <label className="text-left">Email</label>
+            {/* <label className="text-left">Email</label> */}
             {renderFormEmailField()}
-            <label className="label">Password</label>
+            {/* <label className="label">Password</label> */}
             {renderFormPasswordField()}
             {renderFormLoginBtn()}
         </form>

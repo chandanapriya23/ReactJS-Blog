@@ -7,7 +7,7 @@ const FormError = ({hasError}) => {
             style={{
                 display: hasError ? '' : 'none',
             }}>
-            <h4>Please enter all the fields</h4>
+            <h5 className = "text-red-600">Please enter all the fields</h5>
         </div>
     );
 };

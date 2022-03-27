@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Link, navigate } from "@reach/router";
 import { createUserAccount } from "../services/posts";
-import FormTitle from "./common/form_title";
 import FormLabel from "./common/form_label";
 import FormError from "./common/form_error";
 import FormFields from "./common/form_field";
 import SignInSignUpLink from "./common/form_signin_signup_link";
-// import Alert from "./alert";
 
 export default props => {
 
@@ -14,7 +12,6 @@ export default props => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [displayName, setDisplayName] = useState('');
-	const [showAlert, setShowAlert] = useState(false);
 
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
@@ -55,10 +52,6 @@ export default props => {
 			};
 			await createUserAccount(payload);
 			setSubmitted(true);
-			// setShowAlert(true);
-			// setTimeout(() => {
-			// 	setShowAlert(false);
-			// }, 3000);
 			navigate('/');
 			setError(false);
 		} catch (err) {
@@ -68,12 +61,10 @@ export default props => {
 
 	return (
 		<div className="w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-1">
-			{/* <FormTitle/> */}
 			<div className="text-primary m-6">
 				<FormLabel data="Join Brivtter"/>
 				<div className="messages">
 					<FormError hasError = {error}/>
-					{/* {showAlert && <Alert message = {`User ${displayName} successfully registered!!`}/>} */}
 				</div>
 				<FormFields mode = "register" displayName = {displayName} handleName = {handleName} email = {email} handleEmail = {handleEmail} password = {password} handlePassword = {handlePassword} handleSubmit = {handleSubmit}/>
 				<SignInSignUpLink mode = "register"/>
