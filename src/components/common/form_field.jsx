@@ -1,4 +1,5 @@
 import React from 'react';
+import { REGISTER } from "../../utils/constants";
 
 const FormFields = (props) => {
 
@@ -43,11 +44,10 @@ const FormFields = (props) => {
 			<div className="flex items-center mt-3 justify-center">
 				<button
 					className={"bg-blue-700 hover:bg-blue-500 py-2 px-4 text-md text-white rounded border border-blue focus:outline-none focus:border-black"}
-					// value="Login"
 					onClick={props.handleSubmit}
 					type="submit"
 				>
-					{props.mode == "register" ? "Create Account" : "Log In"}
+					{props.mode == REGISTER ? "Create Account" : "Log In"}
 				</button>
 			</div>
 		)
@@ -56,16 +56,13 @@ const FormFields = (props) => {
     return (
         <form>
             {
-                props.mode == "register" ? 
+                props.mode == REGISTER ? 
                 <>
-                    {/* <label className="text-left">Name</label> */}
                     {renderFormNameField()}
                 </>
                 : ""
             }
-            {/* <label className="text-left">Email</label> */}
             {renderFormEmailField()}
-            {/* <label className="label">Password</label> */}
             {renderFormPasswordField()}
             {renderFormLoginBtn()}
         </form>

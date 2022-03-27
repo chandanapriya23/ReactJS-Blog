@@ -9,12 +9,3 @@ const FormLabel = ({data}) => (
 );
 
 export default FormLabel;
-
-// export default function Label({data, onChildClick}) {
-//     return (
-//       <div className="child">
-//        <button onClick={onChildClick}>{data}</button>
-//       </div>
-//     );
-//   }
-

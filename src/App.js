@@ -1,9 +1,9 @@
 import './App.css';
-import Routes from "./routes";
+import Routers from "./routes";
 
 const App = () => (
     <>
-      <Routes></Routes>
+      <Routers></Routers>
     </>
 )
 

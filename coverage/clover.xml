@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1648352717140" clover="3.2.0">
-  <project timestamp="1648352717141" name="All files">
-    <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="0" coveredelements="0" complexity="0" loc="0" ncloc="0" packages="0" files="0" classes="0"/>
+<coverage generated="1648417374545" clover="3.2.0">
+  <project timestamp="1648417374545" name="All files">
+    <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5" elements="11" coveredelements="11" complexity="0" loc="6" ncloc="6" packages="1" files="2" classes="2"/>
+    <file name="alert.jsx" path="/Users/chandanapriya/Documents/coding_exercise/ReactJS-Blog/src/components/alert.jsx">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <line num="4" count="1" type="stmt"/>
+    </file>
+    <file name="delete_modal.jsx" path="/Users/chandanapriya/Documents/coding_exercise/ReactJS-Blog/src/components/delete_modal.jsx">
+      <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+      <line num="6" count="2" type="stmt"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="10" count="2" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="22" count="1" type="stmt"/>
+    </file>
   </project>
 </coverage>

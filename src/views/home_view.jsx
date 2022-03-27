@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ListPost from "../components/list_post";
 import CreateEditModal from "../components/create_edit_modal";
 import { createPost, getPosts, editPost } from "../services/posts";
-import { CREATE_POST } from "../utils/constants";
+import { CREATE_POST, DELETE_POST } from "../utils/constants";
 import UserContext from "../components/context";
 import Alert from "../components/alert";
 import { navigate } from "@reach/router";
@@ -18,12 +18,13 @@ export default props => {
     const [spinner, showSpinner] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     // Creating & Editing Post API call
     const handleSave = async (data) => {
         try {
             if (modalMode === CREATE_POST) {
-                const createPayload = { "post": { "title": data ?.title, "body": data ?.body} }
+                const createPayload = { "post": { "title": data ?.title, "body": data ?.body} };
                 showSpinner(true);
                 const response = await createPost(createPayload, data ?.token);
                 // if (response ?.error && (response.error == "Signature has expired")) {
@@ -37,9 +38,11 @@ export default props => {
                 }, 2000);
                 handleGetPosts();
             } else {
-                const editPayload = { "post": { "title": data ?.title, "body": data ?.body } }
+                const editPayload = { "post": { "title": data ?.title, "body": data ?.body } };
+                showSpinner(true);
                 const response = await editPost(postId, editPayload, data ?.token);
                 setIsShowModal(false);
+                showSpinner(false);
                 setShowMessage(true);
                 setTimeout(() => {
                     setShowMessage(false);
@@ -103,20 +106,17 @@ export default props => {
 
     const renderPagination = () => {
         return (
-            <div className="col-3 mt-[1em]">
+            <div className="col-4 mt-[1em] cursor-pointer">
                 <nav>
                     <ul className="inline-flex -space-x-px float-right">
                         <li>
-                            <a onClick={() => handleCurrentPage(currentPage - 1)} className="py-2 px-3 ml-0 leading-tight text-fuchsia-400 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                            {currentPage!==1 && <a onClick={() => handleCurrentPage(currentPage - 1)} className="py-2 px-3 ml-0 leading-tight text-black bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>}
                         </li>
+                        {Array.from(Array(totalPages), (e, i) => {
+                            return <li key={i}><a onClick={() => handleCurrentPage(i+1)} className={`py-2 px-3 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${currentPage == i+1 ? 'text-white bg-cyan-800' : 'text-black bg-white'}`}>{i+1}</a></li>
+                        })}
                         <li>
-                            <a onClick={() => handleCurrentPage(1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                        </li>
-                        <li>
-                            <a onClick={() => handleCurrentPage(2)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                        </li>
-                        <li>
-                            <a onClick={() => handleCurrentPage(currentPage + 1)} className="py-2 px-3 leading-tight text-fuchsia-400 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                           {totalPages !== currentPage && <a onClick={() => handleCurrentPage(currentPage + 1)} className="py-2 px-3 leading-tight text-black bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>}
                         </li>
                     </ul>
                 </nav>
@@ -126,7 +126,7 @@ export default props => {
 
     const renderCreatePostBtn = () => {
         return (
-            <div className="col-3 mt-[0.5em]">
+            <div className="col-2 mt-[0.5em]">
                 <button className="rounded-lg bg-gradient-to-r from-cyan-600 via-cyan-700 to-cyan-800 hover:bg-gradient-to-br py-2 px-4 text-white" onClick={() => handleModal()}>Create Post</button>
             </div>
         )
@@ -135,7 +135,7 @@ export default props => {
     const renderAlertMessage = () => {
         return (
             <div className="col-6">
-                {showMessage && <Alert message={modalMode == CREATE_POST ? "Post has been successfully created." : modalMode == 'delete' ? "Post has been successfully deleted" : "Post has been successfully updated."} />}
+                {showMessage && <Alert message={modalMode == CREATE_POST ? "Post has been successfully created." : modalMode == DELETE_POST ? "Post has been successfully deleted" : "Post has been successfully updated."} />}
             </div>
         )
     }
@@ -143,18 +143,20 @@ export default props => {
     const renderFooterHeader = () => {
         return (
             <footer className="py-3 bg-gray-700 text-center text-white">
-                Copyright © 2022 Brivity. All rights reserved
+                Copyright © 2022 Brivtter. All rights reserved
             </footer>
         )
     }
 
     const handleGetPosts = async () => {
-        let response = await getPosts(currentPage);
+        const response = await getPosts(currentPage);
         setPosts([...response ?.data ?.posts]);
+        const metaData = response?.data?.meta;
+        setTotalPages(Math.ceil(metaData.total_entries/metaData.per_page));
     }
 
     const deleteAlertMessage = () => {
-        setModalMode('delete');
+        setModalMode(DELETE_POST);
         setShowMessage(true);
         renderAlertMessage();
         setTimeout(() => {
@@ -166,9 +168,7 @@ export default props => {
         if (props ?.location ?.state ?.data == undefined || props ?.location ?.state ?.data == null) {
             navigate('/');
         } else {
-            // handleGetPosts();
-            let response = await getPosts(currentPage);
-            setPosts([...response ?.data ?.posts]);
+            handleGetPosts();
         }
     }, [currentPage]);
 
@@ -184,7 +184,6 @@ export default props => {
                     </div>
                     {isShowModal ? <CreateEditModal spinner={spinner} mode={modalMode} onSave={handleSave} editData={editPostData} show={isShowModal} setIsShowModal={setIsShowModal} /> : ""}
                     <ListPost posts={posts} onEdit={handleEdit} onGetPosts={handleGetPosts} deleteAlertMessage={deleteAlertMessage}></ListPost>
-                    {/* {renderPagination()} */}
                     {renderFooterHeader()}
                 </div>
             </UserContext.Provider>

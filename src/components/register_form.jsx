@@ -5,6 +5,7 @@ import FormLabel from "./common/form_label";
 import FormError from "./common/form_error";
 import FormFields from "./common/form_field";
 import SignInSignUpLink from "./common/form_signin_signup_link";
+import { REGISTER } from '../utils/constants';
 
 export default props => {
 
@@ -66,8 +67,8 @@ export default props => {
 				<div className="messages">
 					<FormError hasError = {error}/>
 				</div>
-				<FormFields mode = "register" displayName = {displayName} handleName = {handleName} email = {email} handleEmail = {handleEmail} password = {password} handlePassword = {handlePassword} handleSubmit = {handleSubmit}/>
-				<SignInSignUpLink mode = "register"/>
+				<FormFields mode = {REGISTER} displayName = {displayName} handleName = {handleName} email = {email} handleEmail = {handleEmail} password = {password} handlePassword = {handlePassword} handleSubmit = {handleSubmit}/>
+				<SignInSignUpLink mode = {REGISTER}/>
 			</div>
 		</div>
 	);
